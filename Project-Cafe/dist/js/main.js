@@ -1,5 +1,5 @@
 /*!
- * CafeApp v0.0.1
+ * CafeApp v0.1.1
  * Copyright 2014-2014 Matthew King
  */
 
@@ -34130,10 +34130,17 @@ cafe.controller('FormController', ['$scope', '$filter', '$location', '$route', '
             var _tempId = angular.element(v).attr('id');
             angular.element(v)
             .attr('ng-model', $scope.settings.fieldModel+'.'+_tempId)
+            .removeClass('ng-pristine')
+            .removeClass('ng-valid')
+            .removeClass('ng-valid-email')
+            .removeClass('ng-valid-required')
+            .removeClass('ng-invalid')
+            .removeClass('ng-invalid-required')
             .removeAttr('ng-required')
             .removeAttr('ng-repeat')
             .removeAttr('ng-disabled')
-            .removeAttr('ng-show');
+            .removeAttr('ng-show')
+            .removeAttr('ng-options');
           });
       }
 
@@ -34200,6 +34207,38 @@ var cafeForm = angular.module('CafeForm', ['CafeFormPublish', 'CafeFieldDefiniti
 var cafeFormPublish = angular.module('CafeFormPublish', []);
 
 var cafeFieldDefinitions = angular.module('CafeFieldDefinitions', []);
+//directive which pulls all common fields for the editing menu
+cafeForm.directive('cafeEditCommon', function cafeFieldDirective() {
+  return {
+    restrict: 'AE'
+    , replace: true
+    , templateUrl: 'templates/function/cafe-edit-common.html'
+  };
+});
+
+
+//directive which pull JUST the conditional fields in the editing menu
+cafeForm.directive('cafeEditConditional', function cafeFieldDirective() {
+  return {
+    restrict: 'AE'
+    , replace: true
+    , templateUrl: 'templates/function/cafe-edit-conditional.html'
+  };
+});
+
+
+//directive for the field control "edit, sort, delete"
+cafeForm.directive('cafeEditControls', function cafeFieldDirective() {
+  return {
+    restrict: 'AE'
+    , replace: true
+    , templateUrl: 'templates/function/cafe-edit-controls.html'
+  };
+});
+
+
+//directive that determines which field is being added to form and pull in the correct template
+//this is only for the left side - editing
 cafeForm.directive('cafeFieldEdit', function cafeFieldDirective($compile, $http, $templateCache) {
 	var getTemplate = function(contentType) {
         var templateLoader,
@@ -34239,6 +34278,9 @@ cafeForm.directive('cafeFieldEdit', function cafeFieldDirective($compile, $http,
   };
 });
 
+
+//directive that determines which field is being added to form and pull in the correct template
+//this is only for the right side - publishing
 cafeFormPublish.directive('cafeFieldPublish', function cafeFieldDirective($compile, $http, $templateCache) {
 
 	var getTemplate = function(contentType) {
@@ -34281,6 +34323,7 @@ cafeFormPublish.directive('cafeFieldPublish', function cafeFieldDirective($compi
   };
 
 });
+
 
 
 cafeFieldDefinitions.factory('CafeFieldDefinitions', function() {
@@ -34600,27 +34643,3 @@ cafeFieldDefinitions.factory('CafeFieldDefinitions', function() {
 });
 
 	
-
-cafeForm.directive('cafeEditControls', function cafeFieldDirective() {
-  return {
-    restrict: 'AE'
-    , replace: true
-    , templateUrl: 'templates/function/cafe-edit-controls.html'
-  };
-});
-
-cafeForm.directive('cafeEditCommon', function cafeFieldDirective() {
-  return {
-    restrict: 'AE'
-    , replace: true
-    , templateUrl: 'templates/function/cafe-edit-common.html'
-  };
-});
-
-cafeForm.directive('cafeEditConditional', function cafeFieldDirective() {
-  return {
-    restrict: 'AE'
-    , replace: true
-    , templateUrl: 'templates/function/cafe-edit-conditional.html'
-  };
-});
