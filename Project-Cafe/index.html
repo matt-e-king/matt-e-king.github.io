@@ -6,7 +6,7 @@
   <script src="dist/js/main.js"></script>
   <!-- endbuild -->
 </head>
-<body ng-controller="MainController">
+<body ng-controller="MainController" ng-cloak>
 
   <header role="banner">
 
@@ -65,36 +65,11 @@
             <div class="tab-content col-xs-12">
 
               <ul id="fields" class="tab-pane fade in active">
-                <li>
-                  <button class="btn btn-default" ng-click="addNewSection('text')">
-                    Input +
+                <li ng-repeat="(key, value) in definitions.list">
+                  <button class="btn btn-default" ng-click="addNewSection(key)">
+                    {{key | capitalize:true}} +
                   </button>
-                </li>
-                <li>
-                  <button class="btn btn-default" ng-click="addNewSection('email')">
-                    Email +
-                  </button>
-                </li>
-                <li>
-                  <button class="btn btn-default" ng-click="addNewSection('select')">
-                    Select +
-                  </button>
-                </li>
-                <li>
-                  <button class="btn btn-default" ng-click="addNewSection('textarea')">
-                    Textarea +
-                  </button>
-                </li>
-                <li>
-                  <button class="btn btn-default" ng-click="addNewSection('radio')">
-                    Radio +
-                  </button>
-                </li>
-                <li>
-                  <button class="btn btn-default" ng-click="addNewSection('checkbox')">
-                    Checkbox +
-                  </button>
-                </li>
+                </li> 
               </ul>
 
               <div id="settings" class="tab-pane fade">
@@ -124,6 +99,45 @@
                   </div>
 
                   <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="html">HTML</label>
+                      <textarea id="html" name="html" rows="10" class="form-control"></textarea>
+                    </div>
+                    <button class="btn btn-default" ng-click="loadHTML()">Load HTML</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="container forms">
+
+      <div class="row" ng-view>
+
+      </div>
+
+      <button class="btn btn-primary" ng-click="refresh()">Refresh</button>
+
+    </div>
+
+    <div id="htmlCopy" style="display:none;">
+      <form ng-submit="contactSubmit()" id="{{settings.id}}" name="{{settings.id}}" novalidate>
+        
+      </form>
+    </div>
+
+  </div>
+  
+</body>
+</html>div class="col-md-6">
                     <div class="form-group">
                       <label for="html">HTML</label>
                       <textarea id="html" name="html" rows="10" class="form-control"></textarea>

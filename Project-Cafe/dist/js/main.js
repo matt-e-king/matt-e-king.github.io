@@ -1,5 +1,5 @@
 /*!
- * CafeApp v0.1.1
+ * CafeApp v0.1.3
  * Copyright 2014-2014 Matthew King
  */
 
@@ -34039,7 +34039,17 @@ cafe.factory('CafeDataHandler', function() {
 
 });
 
-cafe.controller('MainController', ['$scope', '$location', '$route', function($scope, $location, $route) {
+cafe.filter('capitalize', function() {
+  return function(input, all) {
+    return (!!input) ? input.replace(/([^\W_]+[^\s-]*) */g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) : '';
+  }
+});
+
+cafe.controller('MainController', ['$scope', '$location', '$route', 'CafeFieldDefinitions', function($scope, $location, $route, CafeFieldDefinitions) {
+
+  $scope.definitions = new CafeFieldDefinitions();
+
+  console.log($scope.definitions);
 
   $scope.settings = {
     id : "form"
@@ -34179,8 +34189,9 @@ cafe.controller('FormController', ['$scope', '$filter', '$location', '$route', '
   }
 
   $scope.addNewSection = function(type) {
-
+    console.log(type);
     var _definition = new CafeFieldDefinitions();
+    console.log(_definition);
     $scope.fields.push(_definition.list[type]);
     $route.reload();
 
@@ -34245,6 +34256,8 @@ cafeForm.directive('cafeFieldEdit', function cafeFieldDirective($compile, $http,
         baseUrl = 'templates/edit/',
         templateMap = {
             text: 'cafe-field-text-edit.html'
+            , password: 'cafe-field-password-edit.html'
+            , file: 'cafe-field-file-edit.html'
             , email: 'cafe-field-email-edit.html'
             , select: 'cafe-field-select-edit.html'
             , textarea: 'cafe-field-textarea-edit.html'
@@ -34288,6 +34301,8 @@ cafeFormPublish.directive('cafeFieldPublish', function cafeFieldDirective($compi
       baseUrl = 'templates/publish/',
       templateMap = {
           text: 'cafe-field-text-publish.html'
+          , password: 'cafe-field-password-publish.html'
+          , file: 'cafe-field-file-publish.html'
           , email: 'cafe-field-email-publish.html'
           , select: 'cafe-field-select-publish.html'
           , textarea: 'cafe-field-textarea-publish.html'
@@ -34333,7 +34348,8 @@ cafeFieldDefinitions.factory('CafeFieldDefinitions', function() {
 
 		this.list.text = {
 
-			meta : {
+      order: 0
+			, meta : {
 				id : {
 					value: 'textBox'
 					, type: 'text'
@@ -34381,9 +34397,112 @@ cafeFieldDefinitions.factory('CafeFieldDefinitions', function() {
 
 		};
 
+    this.list.password = {
+
+      order: 5
+      , meta : {
+        id : {
+          value: 'password'
+          , type: 'text'
+        }
+        , type : {
+          value : 'password'
+          , type: 'text'
+          , showInLoop: false
+        }
+        , required : {
+          value: true
+          , type: 'checkbox'
+        }
+        , disabled : {
+          value: false
+          , type: 'checkbox'
+        }
+        , conditional : {
+          value : 'true'
+          , whichField : ''
+          , operator : ''
+          , type: 'text'
+          , showInLoop: false
+        }
+        , width : {
+          value : 12
+          , showInLoop: false
+        }
+      }
+      , content : {
+        label : {
+          value: 'Password'
+          , type: 'text'
+        }
+        , placeholder : {
+          value: ''
+          , type: 'text'
+        }
+        , value : {
+          value : ''
+          , type: 'text'
+          , showInLoop: false
+        }
+      }
+
+    };
+
+    this.list.file = {
+
+      order: 10
+      , meta : {
+        id : {
+          value: 'file'
+          , type: 'text'
+        }
+        , type : {
+          value : 'file'
+          , type: 'text'
+          , showInLoop: false
+        }
+        , required : {
+          value: true
+          , type: 'checkbox'
+        }
+        , disabled : {
+          value: false
+          , type: 'checkbox'
+        }
+        , conditional : {
+          value : 'true'
+          , whichField : ''
+          , operator : ''
+          , type: 'text'
+          , showInLoop: false
+        }
+        , width : {
+          value : 12
+          , showInLoop: false
+        }
+      }
+      , content : {
+        label : {
+          value: 'Upload File'
+          , type: 'text'
+        }
+        , placeholder : {
+          value: ''
+          , type: 'text'
+        }
+        , value : {
+          value : ''
+          , type: 'text'
+          , showInLoop: false
+        }
+      }
+
+    };
+
     this.list.textarea = {
 
-      meta : {
+      order: 15
+      , meta : {
         id : {
           value: 'textArea'
           , type: 'text'
@@ -34433,7 +34552,8 @@ cafeFieldDefinitions.factory('CafeFieldDefinitions', function() {
 
 		this.list.email = {
 
-			meta : {
+      order: 20
+			, meta : {
 				id : {
 					value: 'emailAddress'
 					, type: 'text'
@@ -34483,7 +34603,8 @@ cafeFieldDefinitions.factory('CafeFieldDefinitions', function() {
 
     this.list.select = {
 
-      meta : {
+      order: 25
+      , meta : {
         id : {
           value: 'dropdown'
           , type: 'text'
@@ -34537,7 +34658,8 @@ cafeFieldDefinitions.factory('CafeFieldDefinitions', function() {
 
     this.list.radio = {
 
-      meta : {
+      order: 30
+      , meta : {
         id : {
           value: 'radio'
           , type: 'text'
@@ -34587,7 +34709,8 @@ cafeFieldDefinitions.factory('CafeFieldDefinitions', function() {
 
     this.list.checkbox = {
 
-      meta : {
+      order: 35
+      , meta : {
         id : {
           value: 'checkbox'
           , type: 'text'
